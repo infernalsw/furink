@@ -20,4 +20,8 @@ export interface Config {
 	gorse: {
 		endpoint: string;
 	};
+	supabase: {
+		url: string;
+		key: string;
+	};
 }

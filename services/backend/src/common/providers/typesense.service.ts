@@ -28,7 +28,7 @@ export class TypesenseService extends TypesenseClient implements OnApplicationBo
 
 	registerCollection(schema: CollectionCreateSchema) {
 		this.registeredCollections.push(schema);
-		this.logger.log(`Registered  collection: ${schema.name}`);
+		this.logger.log(`Registered collection: ${schema.name}`);
 	}
 
 	async onApplicationBootstrap() {

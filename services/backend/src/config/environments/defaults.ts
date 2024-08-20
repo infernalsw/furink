@@ -22,4 +22,8 @@ export const defaults: Config = {
 	gorse: {
 		endpoint: process.env.GORSE_ENDPOINT ?? "http://localhost:8086",
 	},
+	supabase: {
+		url: process.env.SUPABASE_URL ?? "http://localhost:8086",
+		key: process.env.SUPABASE_KEY ?? "admin",
+	},
 };

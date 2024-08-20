@@ -6,6 +6,7 @@ import { GorseService } from "./providers/gorse.service";
 import { MinioService } from "./providers/minio.service";
 import { PrismaService } from "./providers/prisma.service";
 import { RedisService } from "./providers/redis.service";
+import { SupabaseService } from "./providers/supabase.service";
 import { TypesenseService } from "./providers/typesense.service";
 
 const providers = [
@@ -15,6 +16,7 @@ const providers = [
 	MinioService,
 	PrismaService,
 	RedisService,
+	SupabaseService,
 	TypesenseService,
 ];
 
