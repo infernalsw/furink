@@ -17,4 +17,7 @@ export interface Config {
 	redis: {
 		url: string;
 	};
+	gorse: {
+		endpoint: string;
+	};
 }

@@ -32,7 +32,6 @@ export class TypesenseService extends TypesenseClient implements OnApplicationBo
 	}
 
 	async onApplicationBootstrap() {
-		this.logger.log("Validating collections...");
 		const existingCollections = await this.collections().retrieve();
 		// iterate over registered collections and create them if they don't exist
 		for (const schema of this.registeredCollections) {

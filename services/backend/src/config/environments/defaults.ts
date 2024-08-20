@@ -19,4 +19,7 @@ export const defaults: Config = {
 	redis: {
 		url: process.env.REDIS_URL ?? "redis://localhost:6379",
 	},
+	gorse: {
+		endpoint: process.env.GORSE_ENDPOINT ?? "http://localhost:8086",
+	},
 };
