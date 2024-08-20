@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// A user registered with fur.ink.
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+
+  client ClientUser?
+
+  posts Post[]
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  PostReply PostReply[]
+}
+
+/// Stores sensitive user data.
+model ClientUser {
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  email String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id String @id @default(uuid())
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  title   String
+  content String
+
+  replies PostReply[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostReply {
+  id String @id @default(uuid())
+
+  content String
+
+  parent   Post?   @relation(fields: [parentId], references: [id])
+  parentId String? @map("postId")
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
