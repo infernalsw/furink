@@ -1,0 +1,2 @@
+# prevent unnecessary modifications to the lock file
+pnpm-lock.yaml
