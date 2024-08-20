@@ -11,4 +11,7 @@ export interface Config {
 		accessKey?: string;
 		secretKey?: string;
 	};
+	agenda: {
+		endpoint: string;
+	};
 }

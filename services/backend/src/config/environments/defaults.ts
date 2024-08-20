@@ -13,4 +13,7 @@ export const defaults: Config = {
 		accessKey: process.env.MINIO_ACCESS_KEY ?? "Q3AM3UQ867SPQQA43P2F",
 		secretKey: process.env.MINIO_SECRET_KEY ?? "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG",
 	},
+	agenda: {
+		endpoint: process.env.AGENDA_ENDPOINT ?? "mongodb://localhost:27017/agenda",
+	},
 };
