@@ -12,7 +12,3 @@ export interface Config {
 		secretKey?: string;
 	};
 }
-
-export type DeepPartial<T> = {
-	[P in keyof T]?: DeepPartial<T[P]>;
-};

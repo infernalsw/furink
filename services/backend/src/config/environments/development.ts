@@ -1,3 +1,4 @@
-import { Config, DeepPartial } from "../config.interface";
+import { DeepPartial } from "../../common/types/deep-partial";
+import { Config } from "../config.interface";
 
 export const development: DeepPartial<Config> = {};
