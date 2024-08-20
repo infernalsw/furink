@@ -4,6 +4,13 @@ export interface Config {
 		port: number;
 		apiKey: string;
 	};
+	minio: {
+		endpoint: string;
+		port: number;
+		useSSL: boolean;
+		accessKey?: string;
+		secretKey?: string;
+	};
 }
 
 export type DeepPartial<T> = {
