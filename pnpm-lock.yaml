@@ -148,6 +148,9 @@ importers:
             rxjs:
                 specifier: ^7.8.1
                 version: 7.8.1
+            typesense:
+                specifier: ^1.8.2
+                version: 1.8.2(@babel/runtime@7.23.8)
         devDependencies:
             "@nestjs/cli":
                 specifier: ^10.0.0
@@ -2303,6 +2306,12 @@ packages:
             }
         engines: { node: ">=4" }
 
+    axios@1.7.4:
+        resolution:
+            {
+                integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==,
+            }
+
     axobject-query@3.2.1:
         resolution:
             {
@@ -3691,6 +3700,18 @@ packages:
                 integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==,
             }
 
+    follow-redirects@1.15.6:
+        resolution:
+            {
+                integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==,
+            }
+        engines: { node: ">=4.0" }
+        peerDependencies:
+            debug: "*"
+        peerDependenciesMeta:
+            debug:
+                optional: true
+
     for-each@0.3.3:
         resolution:
             {
@@ -5045,6 +5066,13 @@ packages:
             }
         engines: { node: ">=18" }
 
+    loglevel@1.9.1:
+        resolution:
+            {
+                integrity: sha512-hP3I3kCrDIMuRwAwHltphhDM1r8i55H33GgqjXbrisuJhF4kRhW1dNuxsRklp4bXl8DSdLaNLuiL4A/LWRfxvg==,
+            }
+        engines: { node: ">= 0.6.0" }
+
     loose-envify@1.4.0:
         resolution:
             {
@@ -5879,6 +5907,12 @@ packages:
                 integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==,
             }
         engines: { node: ">= 0.10" }
+
+    proxy-from-env@1.1.0:
+        resolution:
+            {
+                integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==,
+            }
 
     punycode@2.3.1:
         resolution:
@@ -6986,6 +7020,15 @@ packages:
             }
         engines: { node: ">=14.17" }
         hasBin: true
+
+    typesense@1.8.2:
+        resolution:
+            {
+                integrity: sha512-aBpePjA99Qvo+OP2pJwMpvga4Jrm1Y2oV5NsrWXBxlqUDNEUCPZBIksPv2Hq0jxQxHhLLyJVbjXjByXsvpCDVA==,
+            }
+        engines: { node: ">=18" }
+        peerDependencies:
+            "@babel/runtime": ^7.23.2
 
     uid@2.0.2:
         resolution:
@@ -8899,6 +8942,14 @@ snapshots:
 
     axe-core@4.7.0: {}
 
+    axios@1.7.4:
+        dependencies:
+            follow-redirects: 1.15.6
+            form-data: 4.0.0
+            proxy-from-env: 1.1.0
+        transitivePeerDependencies:
+            - debug
+
     axobject-query@3.2.1:
         dependencies:
             dequal: 2.0.3
@@ -10046,6 +10097,8 @@ snapshots:
 
     flatted@3.2.9: {}
 
+    follow-redirects@1.15.6: {}
+
     for-each@0.3.3:
         dependencies:
             is-callable: 1.2.7
@@ -11022,6 +11075,8 @@ snapshots:
             strip-ansi: 7.1.0
             wrap-ansi: 9.0.0
 
+    loglevel@1.9.1: {}
+
     loose-envify@1.4.0:
         dependencies:
             js-tokens: 4.0.0
@@ -11456,6 +11511,8 @@ snapshots:
         dependencies:
             forwarded: 0.2.0
             ipaddr.js: 1.9.1
+
+    proxy-from-env@1.1.0: {}
 
     punycode@2.3.1: {}
 
@@ -12145,6 +12202,14 @@ snapshots:
     typescript@5.3.3: {}
 
     typescript@5.5.4: {}
+
+    typesense@1.8.2(@babel/runtime@7.23.8):
+        dependencies:
+            "@babel/runtime": 7.23.8
+            axios: 1.7.4
+            loglevel: 1.9.1
+        transitivePeerDependencies:
+            - debug
 
     uid@2.0.2:
         dependencies:

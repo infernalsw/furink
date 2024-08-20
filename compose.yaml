@@ -1,9 +1,16 @@
 services:
     postgres:
         image: postgres:13
+        restart: on-failure
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: postgres
         ports:
             - "5432:5432"
+    typesense:
+        image: typesense/typesense:26.0
+        restart: on-failure
+        ports:
+            - "8108:8108"
+        command: "--api-key=admin --enable-cors"
