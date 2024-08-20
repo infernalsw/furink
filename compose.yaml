@@ -8,9 +8,25 @@ services:
             POSTGRES_DB: postgres
         ports:
             - "5432:5432"
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
     typesense:
         image: typesense/typesense:26.0
         restart: on-failure
         ports:
             - "8108:8108"
-        command: "--api-key=admin --enable-cors"
+        command: "--api-key=admin --data-dir=/data --enable-cors"
+        volumes:
+            - typesense-data:/data
+    mongo:
+        image: mongo:4.4
+        restart: on-failure
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongo-data:/data/db
+
+volumes:
+    postgres-data:
+    typesense-data:
+    mongo-data:

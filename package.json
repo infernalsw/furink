@@ -1,8 +1,10 @@
 {
+	"name": "furinkapp",
 	"private": true,
 	"scripts": {
 		"prepare": "husky"
 	},
+	"packageManager": "pnpm@9.7.1",
 	"devDependencies": {
 		"@commitlint/cli": "^19.4.0",
 		"@commitlint/config-conventional": "^19.2.2",
