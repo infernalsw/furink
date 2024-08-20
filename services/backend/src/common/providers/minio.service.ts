@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Client as MinioClient } from "minio";
 
 import { ConfigService } from "./config.service";

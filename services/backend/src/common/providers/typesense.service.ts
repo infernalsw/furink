@@ -1,5 +1,4 @@
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { json } from "stream/consumers";
 import { Client as TypesenseClient } from "typesense";
 import { CollectionCreateSchema } from "typesense/lib/Typesense/Collections";
 
@@ -42,7 +41,7 @@ export class TypesenseService extends TypesenseClient implements OnApplicationBo
 			if (existingCollection) {
 				// validate schema
 				schema.fields?.forEach((field) => {
-					const existingField = existingCollection.fields.find((f) => f.name === field.name);
+					const existingField = existingCollection.fields?.find((f) => f.name === field.name);
 					if (!existingField) {
 						this.logger.warn(`Field ${field.name} missing in collection ${schema.name}`);
 					}
@@ -52,7 +51,7 @@ export class TypesenseService extends TypesenseClient implements OnApplicationBo
 				});
 				continue;
 			}
-			this.logger.log(`Creating collection: ${name}`);
+			this.logger.log(`Creating collection: ${schema.name}`);
 			await this.collections().create(schema);
 		}
 		this.logger.log("Collections validated.");
