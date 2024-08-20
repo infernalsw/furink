@@ -6,5 +6,6 @@
 			"./packages/*/tsconfig.json",
 			"./services/*/tsconfig.json"
 		]
-	}
+	},
+	"ignorePatterns": ["**/dist/*", "**/node_modules/*"]
 }

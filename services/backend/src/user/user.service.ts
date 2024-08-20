@@ -9,7 +9,7 @@ export class UserService implements OnModuleInit {
 		private readonly typesense: TypesenseService
 	) {}
 
-	async onModuleInit() {
+	onModuleInit() {
 		this.typesense.registerCollection({
 			name: "users",
 			fields: [

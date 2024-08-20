@@ -14,4 +14,7 @@ export interface Config {
 	agenda: {
 		endpoint: string;
 	};
+	redis: {
+		url: string;
+	};
 }

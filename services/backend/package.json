@@ -30,8 +30,11 @@
 		"lodash": "^4.17.21",
 		"minio": "^8.0.1",
 		"neverthrow": "^7.0.1",
+		"redis": "^4.7.0",
+		"redis-om": "^0.4.6",
 		"reflect-metadata": "^0.2.0",
 		"rxjs": "^7.8.1",
+		"stripe": "^16.8.0",
 		"typesense": "^1.8.2"
 	},
 	"devDependencies": {

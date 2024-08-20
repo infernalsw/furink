@@ -16,4 +16,7 @@ export const defaults: Config = {
 	agenda: {
 		endpoint: process.env.AGENDA_ENDPOINT ?? "mongodb://localhost:27017/agenda",
 	},
+	redis: {
+		url: process.env.REDIS_URL ?? "redis://localhost:6379",
+	},
 };
