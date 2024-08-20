@@ -145,6 +145,9 @@ importers:
             minio:
                 specifier: ^8.0.1
                 version: 8.0.1
+            neverthrow:
+                specifier: ^7.0.1
+                version: 7.0.1
             reflect-metadata:
                 specifier: ^0.2.0
                 version: 0.2.2
@@ -5430,6 +5433,13 @@ packages:
             {
                 integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==,
             }
+
+    neverthrow@7.0.1:
+        resolution:
+            {
+                integrity: sha512-NY1sD1wZn6dwwzV9/5KZ4wRIpH4xC7ARy3fGmnEi2Pi8CHDTWlp+WSF+if8cudrwuCWGrk2y2BE/dnGh070iuA==,
+            }
+        engines: { node: ">=18" }
 
     next@14.2.5:
         resolution:
@@ -11396,6 +11406,8 @@ snapshots:
     negotiator@0.6.3: {}
 
     neo-async@2.6.2: {}
+
+    neverthrow@7.0.1: {}
 
     next@14.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
         dependencies:
