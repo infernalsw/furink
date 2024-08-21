@@ -1,14 +1,17 @@
-import Image from "next/image";
+"use client";
 
+import Image from "next/image";
+import Header from "../components/header";
 export default function Home() {
     return (
-
-		
+        
         <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-gray-900 text-white">
-            {/* Top Bar */}
-            <div className="w-full flex justify-between items-center p-4 bg-gray-800">
-                <h1 className="text-xl font-bold">fur.ink</h1>
+            
+
+            <div className="w-full max-w-4xl">
+            <Header />
             </div>
+           
 
             {/* Profile and Content */}
             <div className="flex w-full max-w-4xl mt-8">
@@ -16,7 +19,7 @@ export default function Home() {
                 <div className="flex-none w-1/4 p-4 bg-gray-800 rounded-lg">
                     <div className="flex flex-col items-center">
                         <Image
-                            src="/path-to-profile-image.jpg"  // Replace with actual image path
+                            src="/images/avatar.png"  // Replace with actual image path
                             alt="Profile Picture"
                             width={120}
                             height={120}
@@ -35,7 +38,7 @@ export default function Home() {
                     {/* Post 1 */}
                     <div className="mb-8 p-4 bg-gray-800 rounded-lg">
                         <Image
-                            src="/path-to-wolf-image.jpg"  // Replace with actual image path
+                            src="/images/sample-post.jpg"  // meow meow
                             alt="Wolf Picture"
                             width={500}
                             height={300}
