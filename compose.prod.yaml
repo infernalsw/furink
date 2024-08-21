@@ -59,6 +59,10 @@ services:
             dockerfile: services/backend/Dockerfile
         restart: on-failure
         env_file:
+            - path: env/backend-db.env.default
+              required: true
+            - path: env/backend-db.env
+              required: false
             - path: env/backend.env.default
               required: true
             - path: env/backend.env
@@ -91,6 +95,11 @@ services:
     postgres:
         image: postgres:16-alpine
         restart: on-failure
+        healthcheck:
+            test: pg_isready -U furink -h localhost
+            interval: 5s
+            timeout: 5s
+            retries: 10
         env_file:
             - path: env/postgres.env.default
               required: true
@@ -99,6 +108,14 @@ services:
             - path: env/gorse.env.default
               required: true
             - path: env/gorse.env
+              required: false
+            - path: env/auth-db.env.default
+              required: true
+            - path: env/auth-db.env
+              required: false
+            - path: env/backend-db.env.default
+              required: true
+            - path: env/backend-db.env
               required: false
         command:
             - "-c"
@@ -114,7 +131,7 @@ services:
         volumes:
             - postgres-data:/var/lib/postgresql/data
             - postgres-furink-data:/var/lib/postgresql/furink
-            - ./docker/postgres/docker-entrypoint-initdb:/docker-entrypoint-initdb.d:ro
+            - ./docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
         networks:
             internal:
         expose:
@@ -197,3 +214,47 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.minio.service=minio"
             - "traefik.http.services.minio.loadbalancer.server.port=9000"
+
+    auth:
+        image: ghcr.io/supabase/auth:v2.158.1
+        depends_on:
+            postgres:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--no-verbose",
+                    "--tries=1",
+                    "--spider",
+                    "http://localhost:9999/health",
+                ]
+            timeout: 5s
+            interval: 5s
+            retries: 3
+        restart: unless-stopped
+        env_file:
+            - path: env/common.env.default
+              required: true
+            - path: env/common.env
+              required: false
+            - path: env/auth-db.env.default
+              required: true
+            - path: env/auth-db.env
+              required: false
+            - path: env/auth.env.default
+              required: true
+            - path: env/auth.env
+              required: false
+        expose:
+            - 9100 # prometheus
+            - 9999 # api
+        networks:
+            edge:
+            internal:
+        labels:
+            - "furink.traefik.include=true"
+            - "traefik.enable=true"
+            - "traefik.http.routers.auth.service=auth"
+            - "traefik.http.services.auth.loadbalancer.server.port=9999"

@@ -28,6 +28,20 @@ function create_user_and_database() {
 	fi
 }
 
-# unnecessary since set up in docker compose
-# create_user_and_database $FURINK_DB $FURINK_USER $FURINK_PASSWORD
+function create_schema_for_database_and_user() {
+	local schema=$(echo $1)
+	local database=$(echo $2)
+	local owner=$(echo $3)
+
+	echo "  Creating schema '$schema'"
+		psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+					\c $database
+					CREATE SCHEMA IF NOT EXISTS $schema AUTHORIZATION $owner;
+					GRANT ALL ON SCHEMA $schema TO $owner;
+		EOSQL
+}
+
+create_user_and_database $FURINK_DB $FURINK_USER $FURINK_PASSWORD
 create_user_and_database $GORSE_DB $GORSE_USER $GORSE_PASSWORD
+create_user_and_database $AUTH_DB $AUTH_USER $AUTH_PASSWORD
+create_schema_for_database_and_user $AUTH_SCHEMA $AUTH_DB $AUTH_USER
