@@ -4,3 +4,6 @@ http:
         backend:
             rule: 'Host(`api.{{env "FURINK_ROOT_DOMAIN"}}`)'
             service: backend@docker
+        minio:
+            rule: 'Host(`cdn.{{env "FURINK_ROOT_DOMAIN"}}`)'
+            service: minio@docker

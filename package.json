@@ -2,7 +2,7 @@
 	"name": "furinkapp",
 	"private": true,
 	"scripts": {
-		"prepare": "husky"
+		"prepare": "husky || true"
 	},
 	"packageManager": "pnpm@9.7.1",
 	"devDependencies": {

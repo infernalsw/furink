@@ -23,6 +23,8 @@ EOSQL
 	    		CREATE USER $owner WITH ENCRYPTED PASSWORD '$password';
 	    		CREATE DATABASE $database;
 	    		GRANT ALL PRIVILEGES ON DATABASE $database TO $owner;
+				\c $database
+				GRANT ALL ON SCHEMA public TO $owner;
 EOSQL
 	fi
 }
