@@ -18,7 +18,7 @@ VOLUME /var/lib/postgresql/furink
 
 USER furink
 
-COPY --chown=furink:furink scripts/ssl.sh /run.sh
+COPY --chown=furink:furink scripts/run.sh /run.sh
 
 RUN chmod +x /run.sh
 
