@@ -49,8 +49,6 @@ services:
             - "./config/traefik-dynamic.yml:/dynamic.yml:ro"
         networks:
             edge:
-        depends_on:
-            - backend
 
     # fur.ink backend
     backend:
