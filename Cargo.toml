@@ -1,3 +1,11 @@
 [workspace]
 resolver = "2"
-members = []
+members = ["services/detector", "tools/e621-extract", "tools/e6ai-extract"]
+
+[workspace.dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+reqwest = { version = "0.12", features = ["stream"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+tokio = { version = "1", features = ["full"] }

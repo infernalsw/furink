@@ -42,7 +42,7 @@ services:
         volumes:
             - postgres-data:/var/lib/postgresql/data
             - postgres-furink-data:/var/lib/postgresql/furink
-            - ./docker/postgres/docker-entrypoint-initdb:/docker-entrypoint-initdb.d:ro
+            - ./docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
         ports:
             - "5432:5432"
         depends_on:
@@ -54,6 +54,14 @@ services:
         restart: on-failure
         ports:
             - "6379:6379"
+
+    mongo:
+        image: mongo:7
+        restart: on-failure
+        volumes:
+            - mongo-data:/data/db
+        ports:
+            - "27017:27017"
 
     typesense:
         image: typesense/typesense:26.0
