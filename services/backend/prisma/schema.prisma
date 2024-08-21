@@ -75,10 +75,11 @@ model UserProfileIntegration {
   updatedAt DateTime @updatedAt
 }
 
+/// A type of profile integration.
 model UserProfileIntegrationType {
-  id String @id @default(uuid())
-
-  name String
+  id          String @id
+  label       String
+  description String
 
   integrations UserProfileIntegration[]
 

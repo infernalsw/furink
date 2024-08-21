@@ -25,6 +25,6 @@ export class RedisService {
 	async onModuleInit() {
 		await this.client.connect();
 		await this.client.ping();
-		this.logger.log("Connected to Redis.");
+		this.logger.log("Connected to Redis");
 	}
 }
