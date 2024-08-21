@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
-import { PrismaService } from "src/common/providers/prisma.service";
+import { PostReply, Prisma } from "@prisma/client";
+import { ResultAsync } from "neverthrow";
+import { PrismaError, PrismaService } from "src/common";
 
 @Injectable()
 export class PostReplyService {
@@ -11,10 +12,13 @@ export class PostReplyService {
 	 * @param where
 	 * @returns
 	 */
-	findOne(where: Prisma.PostReplyWhereUniqueInput) {
-		return this.prisma.postReply.findUnique({
-			where,
-		});
+	findOne(where: Prisma.PostReplyWhereUniqueInput): ResultAsync<PostReply | null, Error> {
+		return ResultAsync.fromPromise(
+			this.prisma.postReply.findUnique({
+				where,
+			}),
+			(err) => err as PrismaError
+		);
 	}
 
 	/**
@@ -22,8 +26,11 @@ export class PostReplyService {
 	 * @param params
 	 * @returns
 	 */
-	findMany(params: Prisma.PostReplyFindManyArgs) {
-		return this.prisma.postReply.findMany(params);
+	findMany(params: Prisma.PostReplyFindManyArgs): ResultAsync<PostReply[], Error> {
+		return ResultAsync.fromPromise<PostReply[], Error>(
+			this.prisma.postReply.findMany(params),
+			(err) => err as Error
+		);
 	}
 
 	/**
@@ -31,10 +38,13 @@ export class PostReplyService {
 	 * @param data
 	 * @returns
 	 */
-	create(data: Prisma.PostReplyCreateInput) {
-		return this.prisma.postReply.create({
-			data,
-		});
+	create(data: Prisma.PostReplyCreateInput): ResultAsync<PostReply, Error> {
+		return ResultAsync.fromPromise<PostReply, Error>(
+			this.prisma.postReply.create({
+				data,
+			}),
+			(err) => err as Error
+		);
 	}
 
 	/**
@@ -43,11 +53,17 @@ export class PostReplyService {
 	 * @param data
 	 * @returns
 	 */
-	update(where: Prisma.PostReplyWhereUniqueInput, data: Prisma.PostReplyUpdateInput) {
-		return this.prisma.postReply.update({
-			where,
-			data,
-		});
+	update(
+		where: Prisma.PostReplyWhereUniqueInput,
+		data: Prisma.PostReplyUpdateInput
+	): ResultAsync<PostReply, Error> {
+		return ResultAsync.fromPromise<PostReply, Error>(
+			this.prisma.postReply.update({
+				where,
+				data,
+			}),
+			(err) => err as Error
+		);
 	}
 
 	/**
@@ -55,10 +71,13 @@ export class PostReplyService {
 	 * @param where
 	 * @returns
 	 */
-	delete(where: Prisma.PostReplyWhereUniqueInput) {
-		return this.prisma.postReply.delete({
-			where,
-		});
+	delete(where: Prisma.PostReplyWhereUniqueInput): ResultAsync<PostReply, Error> {
+		return ResultAsync.fromPromise<PostReply, Error>(
+			this.prisma.postReply.delete({
+				where,
+			}),
+			(err) => err as Error
+		);
 	}
 
 	/**
@@ -66,7 +85,10 @@ export class PostReplyService {
 	 * @param params
 	 * @returns
 	 */
-	count(params: Prisma.PostReplyCountArgs) {
-		return this.prisma.postReply.count(params);
+	count(params: Prisma.PostReplyCountArgs): ResultAsync<number, Error> {
+		return ResultAsync.fromPromise<number, Error>(
+			this.prisma.postReply.count(params),
+			(err) => err as Error
+		);
 	}
 }

@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Post, Prisma } from "@prisma/client";
+import { ResultAsync } from "neverthrow";
+import { PrismaError } from "src/common";
 
 import { PrismaService } from "../../common/providers/prisma.service";
 
@@ -12,10 +14,11 @@ export class PostService {
 	 * @param where
 	 * @returns
 	 */
-	findOne(where: Prisma.PostWhereUniqueInput) {
-		return this.prisma.post.findUnique({
-			where,
-		});
+	findOne(where: Prisma.PostWhereUniqueInput): ResultAsync<Post | null, PrismaError> {
+		return ResultAsync.fromPromise(
+			this.prisma.post.findUnique({ where }),
+			(error) => error as PrismaError
+		);
 	}
 
 	/**
@@ -23,8 +26,11 @@ export class PostService {
 	 * @param params
 	 * @returns
 	 */
-	findMany(params: Prisma.PostFindManyArgs) {
-		return this.prisma.post.findMany(params);
+	findMany(params: Prisma.PostFindManyArgs): ResultAsync<Post[], PrismaError> {
+		return ResultAsync.fromPromise(
+			this.prisma.post.findMany(params),
+			(error) => error as PrismaError
+		);
 	}
 
 	/**
@@ -32,10 +38,11 @@ export class PostService {
 	 * @param data
 	 * @returns
 	 */
-	create(data: Prisma.PostCreateInput) {
-		return this.prisma.post.create({
-			data,
-		});
+	create(data: Prisma.PostCreateInput): ResultAsync<Post, PrismaError> {
+		return ResultAsync.fromPromise(
+			this.prisma.post.create({ data }),
+			(error) => error as PrismaError
+		);
 	}
 
 	/**
@@ -44,11 +51,14 @@ export class PostService {
 	 * @param data
 	 * @returns
 	 */
-	update(where: Prisma.PostWhereUniqueInput, data: Prisma.PostUpdateInput) {
-		return this.prisma.post.update({
-			where,
-			data,
-		});
+	update(
+		where: Prisma.PostWhereUniqueInput,
+		data: Prisma.PostUpdateInput
+	): ResultAsync<Post, PrismaError> {
+		return ResultAsync.fromPromise(
+			this.prisma.post.update({ where, data }),
+			(error) => error as PrismaError
+		);
 	}
 
 	/**
@@ -56,10 +66,11 @@ export class PostService {
 	 * @param where
 	 * @returns
 	 */
-	delete(where: Prisma.PostWhereUniqueInput) {
-		return this.prisma.post.delete({
-			where,
-		});
+	delete(where: Prisma.PostWhereUniqueInput): ResultAsync<Post, PrismaError> {
+		return ResultAsync.fromPromise(
+			this.prisma.post.delete({ where }),
+			(error) => error as PrismaError
+		);
 	}
 
 	/**
@@ -67,7 +78,7 @@ export class PostService {
 	 * @param params
 	 * @returns
 	 */
-	count(params: Prisma.PostCountArgs) {
-		return this.prisma.post.count(params);
+	count(params: Prisma.PostCountArgs): ResultAsync<number, PrismaError> {
+		return ResultAsync.fromPromise(this.prisma.post.count(params), (error) => error as PrismaError);
 	}
 }

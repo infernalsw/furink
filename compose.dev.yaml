@@ -72,8 +72,12 @@ services:
               required: false
         restart: on-failure
         ports:
+            - "8107:8107"
             - "8108:8108"
-        command: "--api-key=$$TYPESENSE_API_KEY --data-dir=/data --enable-cors"
+        entrypoint: ["sh"]
+        # https://github.com/docker/compose/issues/9757#issuecomment-1217460695
+        command:
+            "-c '/opt/typesense-server --api-key=$$TYPESENSE_API_KEY --data-dir=/data --enable-cors'"
         volumes:
             - typesense-data:/data
 

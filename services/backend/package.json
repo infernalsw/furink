@@ -9,6 +9,7 @@
 		"prepare": "prisma generate",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+		"dev": "nest start --watch",
 		"start": "nest start",
 		"start:dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",
@@ -21,6 +22,7 @@
 		"test:e2e": "jest --config ./test/jest-e2e.json"
 	},
 	"dependencies": {
+		"@furinkapp/models": "workspace:*",
 		"@hokify/agenda": "^6.3.0",
 		"@nestjs/common": "^10.0.0",
 		"@nestjs/config": "^3.2.3",
@@ -31,6 +33,7 @@
 		"gorsejs": "^0.4.8",
 		"lodash": "^4.17.21",
 		"minio": "^8.0.1",
+		"nestjs-zod": "^3.0.0",
 		"neverthrow": "^7.0.1",
 		"prisma": "^5.18.0",
 		"redis": "^4.7.0",
@@ -38,7 +41,9 @@
 		"reflect-metadata": "^0.2.0",
 		"rxjs": "^7.8.1",
 		"stripe": "^16.8.0",
-		"typesense": "^1.8.2"
+		"ts-pattern": "^5.3.1",
+		"typesense": "^1.8.2",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@nestjs/cli": "^10.0.0",

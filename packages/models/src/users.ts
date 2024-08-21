@@ -47,3 +47,10 @@ export const CreateUserSchema = z.object({
 });
 
 export type CreateUser = z.infer<typeof CreateUserSchema>;
+
+export const UserQuerySchema = z.object({
+	username: z.string().min(3).max(32).optional(),
+	displayName: z.string().min(3).max(32).optional(),
+});
+
+export type UserQuery = z.infer<typeof UserQuerySchema>;

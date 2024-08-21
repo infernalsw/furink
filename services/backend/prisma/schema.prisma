@@ -92,7 +92,7 @@ model UserProfileTag {
   user   User   @relation(fields: [userId], references: [id])
 
   tagId String
-  tag   UserTag @relation(fields: [tagId], references: [id])
+  tag   ProfileTag @relation(fields: [tagId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -110,8 +110,9 @@ model Post {
   title   String
   content String
 
-  replies PostReply[]
-  likes   PostLike[]
+  attachments PostAttachment[]
+  replies     PostReply[]
+  likes       PostLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -146,11 +147,25 @@ model PostLike {
   @@id([postId, userId])
 }
 
-/// A tag that can be applied to a user's profile.
-model UserTag {
+/// An attachment to a post.
+model PostAttachment {
   id String @id @default(uuid())
 
-  name String
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+
+  url String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A tag that can be applied to a user's profile.
+model ProfileTag {
+  id String @id @default(uuid())
+
+  name  String
+  color String
 
   appliedProfiles UserProfileTag[]
 

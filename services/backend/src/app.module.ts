@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { APP_PIPE } from "@nestjs/core";
+import { ZodValidationPipe } from "nestjs-zod";
 
 import { CommonModule } from "./common/common.module";
 import { loadConfiguration } from "./config";
@@ -14,6 +16,11 @@ import { UserModule } from "./user/user.module";
 		PostModule,
 	],
 	controllers: [],
-	providers: [],
+	providers: [
+		{
+			provide: APP_PIPE,
+			useClass: ZodValidationPipe,
+		},
+	],
 })
 export class AppModule {}
