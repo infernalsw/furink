@@ -49,6 +49,10 @@ services:
             - "./config/traefik-dynamic.yml:/dynamic.yml:ro"
         networks:
             edge:
+        depends_on:
+            - backend
+        profiles:
+            - production
 
     # fur.ink backend
     backend:
@@ -76,6 +80,9 @@ services:
         depends_on:
             - postgres
             - mongo
+        profiles:
+            - production
+
     # Postgres
     postgres-ssl-bootstrap:
         build:
@@ -121,6 +128,10 @@ services:
             postgres-ssl-bootstrap:
                 condition: service_completed_successfully
 
+        profiles:
+            - production
+            - development
+
     mongo:
         image: mongo
         restart: on-failure
@@ -141,6 +152,9 @@ services:
             - "6379"
         networks:
             internal:
+        profiles:
+            - production
+            - development
 
     typesense:
         image: typesense/typesense:26.0
@@ -157,6 +171,9 @@ services:
             - typesense-data:/data
         networks:
             internal:
+        profiles:
+            - production
+            - development
 
     gorse:
         image: zhenghaoz/gorse-in-one:0.4
@@ -178,6 +195,9 @@ services:
             - mongo
         networks:
             internal:
+        profiles:
+            - production
+            - development
 
     minio:
         image: quay.io/minio/minio:RELEASE.2024-08-17T01-24-54Z
@@ -205,3 +225,6 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.minio.service=minio"
             - "traefik.http.services.minio.loadbalancer.server.port=9000"
+        profiles:
+            - production
+            - development

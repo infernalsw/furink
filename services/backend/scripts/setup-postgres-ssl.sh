@@ -12,7 +12,7 @@ if [ ! -d "/var/lib/postgresql/furink/certs" ]; then
     certstrap init --common-name furink --passphrase furink
     certstrap request-cert --common-name postgres --domain localhost --passphrase ""
     certstrap sign postgres --CA furink --passphrase furink
-    
+
     mkdir -p /var/lib/postgresql/furink/certs
     chown furink:furink /var/lib/postgresql/furink/certs
     # doesn't copy unless we have execute for w/e reason

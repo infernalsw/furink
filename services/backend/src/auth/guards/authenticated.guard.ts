@@ -28,11 +28,13 @@ export class AuthenticatedGuard implements CanActivate {
 
 		// extract token
 		const token = authorization instanceof Array ? authorization[0] : authorization;
-		if (token === "") {
+		const [type, tokenValue] = token.split(" ");
+		if (type.toLowerCase() !== "bearer" || !tokenValue) {
 			return false;
 		}
+
 		// verify
-		return this.supabase.verify(token);
+		return this.supabase.verify(tokenValue);
 	}
 
 	getRequest(context: ExecutionContext): Request {
