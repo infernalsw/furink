@@ -1,0 +1,246 @@
+networks:
+    # Edge network for services exposed via traefik (eg. traefik, backend, frontend)
+    edge:
+        driver: bridge
+    # Internal network
+    internal:
+        driver: bridge
+
+volumes:
+    postgres-data:
+    postgres-furink-data:
+    mongo-data:
+    typesense-data:
+    minio-data:
+
+services:
+    # traefik proxy
+    traefik:
+        image: traefik:latest
+        env_file:
+            - path: env/common.env.default
+              required: true
+            - path: env/common.env
+              required: false
+        restart: on-failure
+        command:
+            # Enable the docker provider
+            - "--providers.docker=true"
+            - "--providers.docker.network=furink_edge"
+            - "--providers.docker.exposedbydefault=false"
+            # https://doc.traefik.io/traefik/providers/docker/#constraints
+            # prevent traefik from exposing other containers on this host
+            - "--providers.docker.constraints=Label(`furink.traefik.include`,`true`)"
+            # Workaround to not create eg. Host(`backend-furink`) routers
+            # see https://github.com/traefik/traefik/issues/5576
+            - "--providers.docker.defaultRule="
+            # File Provider
+            - "--providers.file=true"
+            - "--providers.file.filename=/dynamic.yml"
+            # HTTP entrypoint
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+            - "--serverstransport.insecureskipverify=true"
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            - "./config/traefik-dynamic.yml:/dynamic.yml:ro"
+        networks:
+            edge:
+        depends_on:
+            - backend
+
+    # fur.ink backend
+    backend:
+        build:
+            context: .
+            dockerfile: services/backend/Dockerfile
+        restart: on-failure
+        env_file:
+            - path: env/backend-db.env.default
+              required: true
+            - path: env/backend-db.env
+              required: false
+            - path: env/backend.env.default
+              required: true
+            - path: env/backend.env
+              required: false
+            - path: env/postgres.env.default
+              required: true
+            - path: env/postgres.env
+              required: false
+        labels:
+            - "furink.traefik.include=true"
+            - "traefik.enable=true"
+            - "traefik.http.routers.backend.service=backend"
+            - "traefik.http.services.backend.loadbalancer.server.port=3000"
+        networks:
+            edge:
+            internal:
+        depends_on:
+            - postgres
+
+    # Postgres
+    postgres-ssl-bootstrap:
+        build:
+            context: docker/postgres-ssl-bootstrap
+            dockerfile: Dockerfile
+        # don't auto restart, only needs to run when compose first goes up
+        volumes:
+            - postgres-furink-data:/var/lib/postgresql/furink
+        restart: no
+
+    postgres:
+        image: postgres:16-alpine
+        restart: on-failure
+        healthcheck:
+            test: pg_isready -U furink -h localhost
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        env_file:
+            - path: env/postgres.env.default
+              required: true
+            - path: env/postgres.env
+              required: false
+            - path: env/gorse.env.default
+              required: true
+            - path: env/gorse.env
+              required: false
+            - path: env/auth-db.env.default
+              required: true
+            - path: env/auth-db.env
+              required: false
+            - path: env/backend-db.env.default
+              required: true
+            - path: env/backend-db.env
+              required: false
+        command:
+            - "-c"
+            - "ssl=on"
+            - "-c"
+            - "ssl_cert_file=/var/lib/postgresql/furink/certs/postgres.crt"
+            - "-c"
+            - "ssl_key_file=/var/lib/postgresql/furink/certs/postgres.key"
+            - "-c"
+            - "ssl_ca_file=/var/lib/postgresql/furink/certs/furink.crt"
+            - "-c"
+            - "ssl_crl_file=/var/lib/postgresql/furink/certs/furink.crl"
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+            - postgres-furink-data:/var/lib/postgresql/furink
+            - ./docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+        networks:
+            internal:
+        depends_on:
+            postgres-ssl-bootstrap:
+                condition: service_completed_successfully
+
+    redis:
+        image: redis:7-alpine
+        restart: on-failure
+        networks:
+            internal:
+
+    typesense:
+        image: typesense/typesense:26.0
+        env_file:
+            - path: env/typesense.env.default
+              required: true
+            - path: env/typesense.env
+              required: false
+        restart: on-failure
+        entrypoint: ["sh"]
+        # https://github.com/docker/compose/issues/9757#issuecomment-1217460695
+        command:
+            "-c '/opt/typesense-server --api-key=$$TYPESENSE_API_KEY --data-dir=/data --enable-cors'"
+        volumes:
+            - typesense-data:/data
+        networks:
+            internal:
+
+    gorse:
+        image: zhenghaoz/gorse-in-one:0.4
+        restart: unless-stopped
+        env_file:
+            - path: env/gorse.env.default
+              required: true
+            - path: env/gorse.env
+              required: false
+        command: >
+            -c /etc/gorse/config.toml  --log-path /var/log/gorse/master.log  --cache-path
+            /var/lib/gorse/master_cache.data
+        volumes:
+            - ./config/gorse.dev.toml:/etc/gorse/config.toml:ro
+        depends_on:
+            - redis
+            - postgres
+        networks:
+            internal:
+
+    minio:
+        image: quay.io/minio/minio:RELEASE.2024-08-17T01-24-54Z
+        env_file:
+            - path: env/minio.env.default
+              required: true
+            - path: env/minio.env
+              required: false
+        healthcheck:
+            test: ["CMD", "mc", "ready", "local"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        volumes:
+            - minio-data:/data
+        #user: "1001:1001" # TODO: no rw perms if we do this, is not done by default (sad)
+        command: server --console-address ":9001" /data
+        networks:
+            edge:
+        labels:
+            - "furink.traefik.include=true"
+            - "traefik.enable=true"
+            - "traefik.http.routers.minio.service=minio"
+            - "traefik.http.services.minio.loadbalancer.server.port=9000"
+
+    auth:
+        image: ghcr.io/supabase/auth:v2.158.1
+        depends_on:
+            postgres:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "wget",
+                    "--no-verbose",
+                    "--tries=1",
+                    "--spider",
+                    "http://localhost:9999/health",
+                ]
+            timeout: 5s
+            interval: 5s
+            retries: 3
+        restart: unless-stopped
+        env_file:
+            - path: env/common.env.default
+              required: true
+            - path: env/common.env
+              required: false
+            - path: env/auth-db.env.default
+              required: true
+            - path: env/auth-db.env
+              required: false
+            - path: env/auth.env.default
+              required: true
+            - path: env/auth.env
+              required: false
+        networks:
+            edge:
+            internal:
+        labels:
+            - "furink.traefik.include=true"
+            - "traefik.enable=true"
+            - "traefik.http.routers.auth.service=auth"
+            - "traefik.http.services.auth.loadbalancer.server.port=9999"
