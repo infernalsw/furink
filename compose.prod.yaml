@@ -51,8 +51,6 @@ services:
             edge:
         depends_on:
             - backend
-        profiles:
-            - production
 
     # fur.ink backend
     backend:
@@ -79,9 +77,6 @@ services:
             internal:
         depends_on:
             - postgres
-            - mongo
-        profiles:
-            - production
 
     # Postgres
     postgres-ssl-bootstrap:
@@ -128,23 +123,6 @@ services:
             postgres-ssl-bootstrap:
                 condition: service_completed_successfully
 
-        profiles:
-            - production
-            - development
-
-    mongo:
-        image: mongo
-        restart: on-failure
-        env_file:
-            - path: env/mongo.env.default
-              required: true
-            - path: env/mongo.env
-              required: false
-        networks:
-            internal:
-        volumes:
-            - mongo-data:/data/db
-
     redis:
         image: redis:7-alpine
         restart: on-failure
@@ -152,9 +130,6 @@ services:
             - "6379"
         networks:
             internal:
-        profiles:
-            - production
-            - development
 
     typesense:
         image: typesense/typesense:26.0
@@ -171,15 +146,12 @@ services:
             - typesense-data:/data
         networks:
             internal:
-        profiles:
-            - production
-            - development
 
     gorse:
         image: zhenghaoz/gorse-in-one:0.4
         restart: unless-stopped
         expose:
-            - 8088
+            - "8088"
         env_file:
             - path: env/gorse.env.default
               required: true
@@ -192,12 +164,9 @@ services:
             - ./config/gorse.dev.toml:/etc/gorse/config.toml:ro
         depends_on:
             - redis
-            - mongo
+            - postgres
         networks:
             internal:
-        profiles:
-            - production
-            - development
 
     minio:
         image: quay.io/minio/minio:RELEASE.2024-08-17T01-24-54Z
@@ -225,6 +194,3 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.minio.service=minio"
             - "traefik.http.services.minio.loadbalancer.server.port=9000"
-        profiles:
-            - production
-            - development
