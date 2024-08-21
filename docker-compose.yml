@@ -1,0 +1,156 @@
+networks:
+    # Edge network for services exposed via traefik (eg. traefik, backend, frontend)
+    edge:
+        driver: bridge
+    # Internal network
+    internal:
+        driver: bridge
+
+volumes:
+    postgres-data:
+    mongo-data:
+    typesense-data:
+
+services:
+    # traefik proxy
+    traefik:
+        image: traefik:latest
+        env_file:
+            - path: env/common.env.default
+              required: true
+            - path: env/common.env
+              required: false
+        restart: on-failure
+        command:
+            # Enable the docker provider
+            - "--providers.docker=true"
+            - "--providers.docker.network=furink_edge"
+            - "--providers.docker.exposedbydefault=false"
+            # https://doc.traefik.io/traefik/providers/docker/#constraints
+            # prevent traefik from exposing other containers on this host
+            - "--providers.docker.constraints=Label(`furink.traefik.include`,`true`)"
+            # Workaround to not create eg. Host(`backend-furink`) routers
+            # see https://github.com/traefik/traefik/issues/5576
+            - "--providers.docker.defaultRule="
+            # File Provider
+            - "--providers.file=true"
+            - "--providers.file.filename=/dynamic.yml"
+            # HTTP entrypoint
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+            - "--serverstransport.insecureskipverify=true"
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            - "./config/traefik-dynamic.yml:/dynamic.yml:ro"
+        networks:
+            edge:
+        depends_on:
+            - backend
+
+    # fur.ink backend
+    backend:
+        build:
+            context: .
+            dockerfile: services/backend/Dockerfile
+        restart: on-failure
+        env_file:
+            - path: env/backend.env.default
+              required: true
+            - path: env/backend.env
+              required: false
+            - path: env/postgres.env.default
+              required: true
+            - path: env/postgres.env
+              required: false
+        labels:
+            - "furink.traefik.include=true"
+            - "traefik.enable=true"
+            - "traefik.http.routers.backend.service=backend"
+            - "traefik.http.services.backend.loadbalancer.server.port=3000"
+        networks:
+            edge:
+            internal:
+        depends_on:
+            - postgres
+            - mongo
+    # Postgres
+    postgres:
+        image: postgres:16-alpine
+        restart: on-failure
+        env_file:
+            - path: env/postgres.env.default
+              required: true
+            - path: env/postgres.env
+              required: false
+            - path: env/gorse.env.default
+              required: true
+            - path: env/gorse.env
+              required: false
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+            - ./services/backend/scripts/postgres-docker-entrypoint-initdb:/docker-entrypoint-initdb.d:ro
+        networks:
+            internal:
+        ports:
+            - "5432"
+
+    mongo:
+        image: mongo
+        restart: on-failure
+        env_file:
+            - path: env/mongo.env.default
+              required: true
+            - path: env/mongo.env
+              required: false
+        networks:
+            internal:
+        volumes:
+            - mongo-data:/data/db
+
+    redis:
+        image: redis:7-alpine
+        restart: on-failure
+        ports:
+            - "6379:6379"
+        networks:
+            internal:
+
+    typesense:
+        image: typesense/typesense:26.0
+        env_file:
+            - path: env/typesense.env.default
+              required: true
+            - path: env/typesense.env
+              required: false
+        restart: on-failure
+        ports:
+            - "8108"
+        command: "--api-key=$$TYPESENSE_API_KEY --data-dir=/data --enable-cors"
+        volumes:
+            - typesense-data:/data
+        networks:
+            internal:
+
+    gorse:
+        image: zhenghaoz/gorse-in-one:0.4
+        restart: unless-stopped
+        ports:
+            - 8088
+        env_file:
+            - path: env/gorse.env.default
+              required: true
+            - path: env/gorse.env
+              required: false
+        command: >
+            -c /etc/gorse/config.toml  --log-path /var/log/gorse/master.log  --cache-path
+            /var/lib/gorse/master_cache.data
+        volumes:
+            - ./config/gorse.dev.toml:/etc/gorse/config.toml:ro
+        depends_on:
+            - redis
+            - mongo
+        networks:
+            internal:

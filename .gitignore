@@ -211,3 +211,6 @@ Temporary Items
 .nfs*
 
 .turbo
+
+# user overriden env files
+env/*.env

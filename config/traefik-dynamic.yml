@@ -1,0 +1,6 @@
+## Dynamic configuration
+http:
+    routers:
+        backend:
+            rule: 'Host(`api.{{env "FURINK_ROOT_DOMAIN"}}`)'
+            service: backend@docker
