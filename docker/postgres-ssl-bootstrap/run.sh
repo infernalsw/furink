@@ -1,7 +1,6 @@
 #!/bin/sh
 
-set -e
-set -u
+set -eu
 
 if [ ! -d "/var/lib/postgresql/furink/certs" ]; then
     echo "certs do not exist, creating"
