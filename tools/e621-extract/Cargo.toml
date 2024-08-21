@@ -1,0 +1,20 @@
+[package]
+name = "e621-extract"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tokio = { workspace = true }
+
+async-compression = { version = "0.4", features = ["futures-io", "gzip"] }
+flate2 = "1"
+nom = "7"
+minio = "0.1"
+toml = "0.8"
+futures-util = "0.3"
+csv-async = "1"
