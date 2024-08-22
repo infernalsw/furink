@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import Image from "next/image";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -7,11 +9,13 @@ import Footer from "../components/footer";
 export default function Home() {
     return (
         
+        
         <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-gray-900 text-white">
             
             <div className="w-full max-w-4xl">
             <Header />
             </div>
+           
 
             {/* Profile and Content */}
             <div className="flex w-full max-w-4xl mt-8">
@@ -19,6 +23,7 @@ export default function Home() {
                 <div className="flex-none w-1/4 p-4 bg-gray-800 rounded-lg">
                     <div className="flex flex-col items-center">
                         <Image
+                            src="/images/avatar.png"  // Replace with actual image path
                             src="/images/avatar.png"  // Replace with actual image path
                             alt="Profile Picture"
                             width={120}
