@@ -12,14 +12,14 @@
 		"@furinkapp/models": "workspace:*",
 		"@tanstack/react-query": "^5.52.0",
 		"axios": "^1.7.4",
-		"next": "14.2.5",
-		"react": "^18",
-		"react-dom": "^18"
+		"next": "^15",
+		"react": "^19",
+		"react-dom": "^19"
 	},
 	"devDependencies": {
-		"@types/node": "^20",
-		"@types/react": "^18",
-		"@types/react-dom": "^18",
+		"@types/node": "^22",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
 		"postcss": "^8",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5"
