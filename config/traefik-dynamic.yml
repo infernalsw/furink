@@ -7,3 +7,6 @@ http:
         minio:
             rule: 'Host(`cdn.{{env "FURINK_ROOT_DOMAIN"}}`)'
             service: minio@docker
+        auth:
+            rule: 'Host(`auth.{{env "FURINK_ROOT_DOMAIN"}}`)'
+            service: auth@docker
