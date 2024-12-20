@@ -14,7 +14,8 @@
 		"axios": "^1.7.4",
 		"next": "^15",
 		"react": "^19",
-		"react-dom": "^19"
+		"react-dom": "^19",
+		"react-markdown": "^9.0.1"
 	},
 	"devDependencies": {
 		"@types/node": "^22",
