@@ -1,9 +1,14 @@
 import { ProfileCard } from "@/components/ProfileCard";
+import { SearchBar } from "@/components/SearchBar";
 
 import "./globals.css";
 import { Providers } from "./providers";
 
-export const NavBar = () => <div className="flex flex-row h-16 bg-fuchsia-100 col-span-3"></div>;
+export const NavBar = () => (
+	<div className="grid grid-cols-content gap-4 bg-fuchsia-100 col-span-3">
+		<SearchBar />
+	</div>
+);
 
 export default function RootLayout({
 	children,

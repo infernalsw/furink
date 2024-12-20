@@ -63,6 +63,9 @@ importers:
       react-markdown:
         specifier: ^9.0.1
         version: 9.0.1(@types/react@19.0.2)(react@19.0.0)
+      ts-pattern:
+        specifier: ^5.3.1
+        version: 5.6.0
     devDependencies:
       '@types/node':
         specifier: ^22
